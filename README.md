@@ -96,3 +96,14 @@ Guest players can browse the editorial answer bank after completing their local 
 
 ## Repository status
 The standalone game (`index.html`) is playable now. The Supabase production backend still requires setup and deployment from the downloadable full project ZIP. This repository initially includes the self-contained game; please do not assume live multiplayer is active.
+
+
+## Player accounts
+
+**Username + password** is the default. Choose a 3–20 character username (letters, numbers, underscores, starting with a letter) and a password of at least 10 characters. A backend endpoint creates a Supabase Auth user with a reserved non-deliverable internal login identifier. Supabase hashes/verifies passwords; the client never writes passwords to localStorage.
+
+The browser stores the Supabase authentication **session**, so returning players stay signed in; their typed username can be remembered for convenience. The daily score, streak, and leaderboard use their cloud account. Guest progress continues using the original browser-local save.
+
+**Email link** is an optional **separate login method**, not a recovery email for a username account. Username-only accounts cannot recover a forgotten password yet; users should keep their password in a password manager. Avoid claiming email-based account recovery exists until implemented.
+
+Signup is restricted to the backend, validates usernames, and applies a basic hashed-client network rate limit. The frontend needs the Supabase project URL and **publishable** key only—never a service-role key.
