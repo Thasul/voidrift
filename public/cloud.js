@@ -162,11 +162,16 @@ async function startDaily(){
     mission=questions;
     onlineStreak=payload.streak||0;
     const s=payload.run;
-    state.index=s.index;state.location=s.location;state.score=s.score;state.finished=s.finished;state.started=true;state.locked=false;state.transit=null;
-    let landed=0;
+    state.index=s.index;state.score=s.score;state.location=destinationForScore(state.score);
+    state.finished=s.finished;state.started=true;state.locked=false;state.transit=null;
+    let earned=0;
     state.answers=s.answers.map((ans,i)=>{
-      if(ans.correct)landed++;
-      return {...ans,cat:mission[i]?.label||'',prompt:mission[i]?.prompt||'',landing:ans.correct?BODIES[landed].name:null};
+      const from=destinationForScore(earned);
+      earned+=Number(ans.score)||0;
+      const to=destinationForScore(earned);
+      return {...ans,cat:mission[i]?.label||'',prompt:mission[i]?.prompt||'',
+        landing:ans.correct?(to>from?BODIES[to].name:'En route to '+BODIES[Math.min(10,to+1)].name):null,
+        passed:flightCrossings(from,to).slice(0,-1)};
     });
     onlineFlight=true;
     save();
