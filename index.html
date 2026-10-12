@@ -151,8 +151,8 @@
  * NEVER add a service-role key, secret key, OpenAI key, or database password here.
  */
 window.VOIDRIFT_CONFIG = {
-  supabaseUrl: '', // e.g. 'https://abcdefghijk.supabase.co'
-  publishableKey: '' // e.g. 'sb_publishable_...' or a legacy anon key
+  supabaseUrl: 'https://ssytwlgpfzfycoyctdum.supabase.co', // public Supabase URL
+  publishableKey: 'sb_publishable_BhRNROqp-GPYEQ-TtV6-uw_d1XR1UaL' // public publishable key
 };
 </script>
 <script>
@@ -631,6 +631,7 @@ window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
 updateHud();refreshMenu();
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>/* VOIDRIFT multiplayer client. Daily play is server-authoritative when signed in.
    Guests retain fully functional local Daily + Unlimited Play as before. */
 (() => {
