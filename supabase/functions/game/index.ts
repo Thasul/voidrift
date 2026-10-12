@@ -249,6 +249,44 @@ async function submit(user:any,body:any){
  if(!saved)throw Error('No result returned by answer transaction');
  return reply({status:'accepted',answer:original,correct,score:points,verdict,scoreSource,canonical,finished:saved.is_finished,index:saved.next_index});
 }
+
+/* Username-password accounts use Supabase's password hashing/session machinery.
+ * They have reserved, non-deliverable login identifiers, never public emails.
+ * Without a recovery email these accounts have no automatic password reset.
+ */
+const usernameEmail=(username:string)=>'u_'+username+'@accounts.voidrift.invalid';
+async function registerPilot(req:Request,body:any){
+ const username=String(body.username||'').trim().toLowerCase();
+ const password=String(body.password||'');
+ if(!/^[a-z][a-z0-9_]{2,19}$/.test(username))return err('Use 3–20 characters: letters, numbers or underscores. Start with a letter.');
+ if(['admin','support','moderator','voidrift','system','staff','official','helpdesk'].includes(username))return err('That username is unavailable.',409);
+ if(password.length<10||password.length>72)return err('Choose a password between 10 and 72 characters.');
+ const ip=(req.headers.get('cf-connecting-ip')||req.headers.get('x-real-ip')||req.headers.get('x-forwarded-for')?.split(',')[0]||'').trim();
+ if(ip){
+  const input=new TextEncoder().encode('voidrift-signup-v1:'+ip);
+  const hashed=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',input))).map(v=>v.toString(16).padStart(2,'0')).join('');
+  const {data:allowed,error:limitError}=await admin.rpc('voidrift_allow_signup',{p_hash:hashed});
+  if(limitError){console.error('Signup throttle unavailable',limitError);return err('Account creation is temporarily unavailable.',503);}
+  if(!allowed)return err('Too many registrations from this connection. Please try again later.',429);
+ }
+ const {data:created,error:createError}=await admin.auth.admin.createUser({
+  email:usernameEmail(username),password,email_confirm:true,
+  user_metadata:{voidrift_username:username}
+ });
+ if(createError||!created?.user){
+  if(createError&&/already|exists|registered|duplicate/i.test(createError.message))return err('That username is taken. Choose another.',409);
+  console.error('Signup error',createError);
+  return err('Could not create an account. Try again.',400);
+ }
+ const {error:profileError}=await admin.from('player_profiles').insert({user_id:created.user.id,display_name:username});
+ if(profileError){
+  console.error('Profile creation failed',profileError);
+  await admin.auth.admin.deleteUser(created.user.id);
+  return err('Account creation failed. Please try again.',503);
+ }
+ return reply({created:true,username});
+}
+
 Deno.serve(async(req)=>{
  if(req.method==='OPTIONS')return new Response(null,{headers});
  try{
@@ -259,6 +297,7 @@ Deno.serve(async(req)=>{
    if(!/^\d{4}-\d{2}-\d{2}$/.test(day))return err('Invalid date');
    return reply({day,leaders:await getLeaderboard(day)});
   }
+  if(req.method==='POST'&&action==='register'){const body=await req.json();return await registerPilot(req,body);}
   const user=await requireUser(req);
   if(!user)return err('Sign in to use cloud scores.',401);
   if(req.method==='GET'&&action==='daily')return reply(await statePayload(user));
