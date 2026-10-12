@@ -16,13 +16,28 @@ jobs:
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
     steps:
+      - name: Check Supabase deployment setup
+        id: preflight
+        shell: bash
+        run: |
+          if [[ -z "$SUPABASE_ACCESS_TOKEN" || -z "$SUPABASE_DB_PASSWORD" || -z "$SUPABASE_PROJECT_ID" ]]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Add SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD and SUPABASE_PROJECT_ID as GitHub Actions secrets to enable cloud deployment."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
+        if: steps.preflight.outputs.ready == 'true'
       - uses: supabase/setup-cli@v1
+        if: steps.preflight.outputs.ready == 'true'
         with:
           version: latest
       - name: Link Supabase project
+        if: steps.preflight.outputs.ready == 'true'
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
       - name: Apply database migrations
+        if: steps.preflight.outputs.ready == 'true'
         run: supabase db push
       - name: Deploy server validation function
+        if: steps.preflight.outputs.ready == 'true'
         run: supabase functions deploy game --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
