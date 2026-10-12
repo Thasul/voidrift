@@ -1,0 +1,16 @@
+name: Check VOIDRIFT frontend
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check game interface and script syntax
+        run: node tools/check_frontend.mjs
