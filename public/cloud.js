@@ -35,25 +35,78 @@ async function api(action,payload,method='POST'){
   if(!res.ok)throw Error(body.error||`Server returned ${res.status}`);
   return body;
 }
+function pilotName(u){
+  return u?.user_metadata?.voidrift_username
+    || (u?.email&&!u.email.endsWith('@accounts.voidrift.invalid')?u.email.split('@')[0]:null)
+    || ('Pilot '+(u?.id||'').slice(0,5).toUpperCase());
+}
+function chooseAuthTab(tab){
+  const username=tab!=='email';
+  toggle('usernameAuthPanel',username);
+  toggle('emailAuthPanel',!username);
+  $('authUsernameTab').setAttribute('aria-pressed',String(username));
+  $('authEmailTab').setAttribute('aria-pressed',String(!username));
+}
 function showAccount(){
   toggle('cloudModal',true);
-  $('accountStatus').textContent=!configured?'Cloud setup required. The game is playable locally. The website owner must add Supabase settings in config.js and deploy the backend.':user?`Signed in as ${user.email}. Your daily progress is saved across devices.`:'Sign in with email to save your daily run and appear on the leaderboard.';
-  $('accountEmail').value=user?.email||'';
+  $('accountStatus').textContent=!configured
+    ?'Cloud setup required. You can still play as a guest.'
+    :user?'Signed in as '+pilotName(user)+'. Your daily score is saved to your account, and this browser remembers your sign-in.'
+    :'Choose a username and password, use an email link instead, or play as a guest.';
+  $('accountEmail').value=(user?.email&&!user.email.endsWith('@accounts.voidrift.invalid'))?user.email:'';
+  if(user)$('accountName').value=pilotName(user);
   toggle('accountSignedIn',!!user);
   toggle('accountSignedOut',!user);
   toggle('cloudSetupHint',!configured);
   toggle('accountNotice',false);
+  if(!user){
+    try{$('accountUsername').value=localStorage.getItem('voidrift-remembered-username')||'';}catch{}
+    chooseAuthTab('username');
+  }
 }
 function updateAccountLabel(){
-  $('accountBtn').textContent=user?'☁ '+(user.email?.split('@')[0]||'PILOT').slice(0,13).toUpperCase():'☁ SIGN IN';
+  $('accountBtn').textContent=user?'☁ '+pilotName(user).slice(0,13).toUpperCase():'☁ SIGN IN';
   $('leaderboardBtn').title='See today’s top pilots';
 }
+
 async function refreshAuth(){
   try{const client=await getClient();if(!client){updateAccountLabel();return;}
     const {data:{user:u}}=await client.auth.getUser();user=u;
   }catch(e){user=null;}
   updateAccountLabel();
 }
+function usernameToEmail(username){
+  return 'u_'+username+'@accounts.voidrift.invalid';
+}
+async function usePasswordAccount(createNew){
+  const username=$('accountUsername').value.trim().toLowerCase();
+  const password=$('accountPassword').value;
+  if(!/^[a-z][a-z0-9_]{2,19}$/.test(username)){showToast('Username: 3–20 letters, numbers or underscores; start with a letter.');return;}
+  if(createNew&&password.length<10){showToast('Use a password with at least 10 characters.');return;}
+  if(!password){showToast('Enter your password.');return;}
+  const loginButton=$('accountPasswordLogin');
+  const createButton=$('accountPasswordRegister');
+  loginButton.disabled=true;createButton.disabled=true;
+  try{
+    const client=await getClient();
+    if(!client)throw Error('Unable to connect to pilot accounts.');
+    if(createNew)await api('register',{username,password});
+    const {data,error}=await client.auth.signInWithPassword({email:usernameToEmail(username),password});
+    if(error)throw Error(createNew?'Account created, but automatic sign-in failed. Try SIGN IN.':'Incorrect username or password.');
+    user=data.user;
+    $('accountPassword').value='';
+    try{localStorage.setItem('voidrift-remembered-username',username);}catch{}
+    updateAccountLabel();showAccount();
+    showToast(createNew?'Welcome aboard, '+username+'!':'Welcome back, '+username+'!');
+  }catch(e){
+    $('accountNotice').textContent=errMessage(e);
+    toggle('accountNotice',true);
+    showToast(errMessage(e));
+  }finally{
+    loginButton.disabled=false;createButton.disabled=false;
+  }
+}
+
 async function sendMagicLink(){
   try{
     const email=$('accountEmail').value.trim();if(!/^\S+@\S+\.\S+$/.test(email))throw Error('Enter a valid email address.');
@@ -205,6 +258,18 @@ function bind(){
   $('introLeadersBtn').addEventListener('click',loadLeaderboard);
   $('accountClose').addEventListener('click',()=>toggle('cloudModal',false));
   $('leaderboardClose').addEventListener('click',()=>toggle('leaderboardModal',false));
+  $('authUsernameTab').addEventListener('click',()=>chooseAuthTab('username'));
+  $('authEmailTab').addEventListener('click',()=>chooseAuthTab('email'));
+  $('accountPasswordLogin').addEventListener('click',()=>usePasswordAccount(false));
+  $('accountPasswordRegister').addEventListener('click',()=>usePasswordAccount(true));
+  $('accountUsername').addEventListener('keydown',e=>{if(e.key==='Enter')usePasswordAccount(false);});
+  $('accountPassword').addEventListener('keydown',e=>{if(e.key==='Enter')usePasswordAccount(false);});
+  $('accountShowPassword').addEventListener('click',()=>{
+    const p=$('accountPassword'),visible=p.type==='text';
+    p.type=visible?'password':'text';
+    $('accountShowPassword').textContent=visible?'SHOW PASSWORD':'HIDE PASSWORD';
+    $('accountShowPassword').setAttribute('aria-pressed',String(!visible));
+  });
   $('accountSignIn').addEventListener('click',sendMagicLink);
   $('accountSignOut').addEventListener('click',signOut);
   $('accountSaveName').addEventListener('click',saveName);
