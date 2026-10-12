@@ -3,6 +3,6 @@
  * NEVER add a service-role key, secret key, OpenAI key, or database password here.
  */
 window.VOIDRIFT_CONFIG = {
-  supabaseUrl: '', // e.g. 'https://abcdefghijk.supabase.co'
-  publishableKey: '' // e.g. 'sb_publishable_...' or a legacy anon key
+  supabaseUrl: 'https://ssytwlgpfzfycoyctdum.supabase.co', // public URL
+  publishableKey: 'sb_publishable_BhRNROqp-GPYEQ-TtV6-uw_d1XR1UaL' // publishable browser key
 };
