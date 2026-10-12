@@ -109,6 +109,12 @@
 .rarity-chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
 .rarity-chip{border:1px solid #5684ad;border-radius:999px;background:#102d4b;color:#dff5ff;font-size:12px;padding:8px 11px}
 @media(max-width:650px){.rarity-explorer{padding:13px}.rarity-controls{grid-template-columns:1fr}.rarity-controls button{width:100%}.rarity-header h3{font-size:20px}}
+
+/* Account choice tabs and password form */
+.auth-tab[aria-pressed="true"]{color:var(--cyan);border-color:rgba(137,235,251,.65);background:rgba(137,235,251,.10)}
+#usernameAuthPanel .cloud-input,#emailAuthPanel .cloud-input{margin-top:7px}
+#accountPasswordRegister{border-color:rgba(137,235,251,.4)}
+#usernameAuthPanel .fineprint,#emailAuthPanel .fineprint{line-height:1.55}
 </style>
 </head>
 <body>
@@ -139,7 +145,32 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal-shade hidden" id="cloudModal"><div class="modal-panel multiplayer-modal">
 <span class="tag">☁ PILOT ACCOUNT</span><h2>Flight control</h2><p id="accountStatus">Sign in to save your game.</p>
-<div id="accountSignedOut"><label class="input-label" for="accountEmail">EMAIL ADDRESS</label><input id="accountEmail" class="cloud-input" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"/><div class="menu-actions"><button class="primary" id="accountSignIn">EMAIL ME A SIGN-IN LINK</button><button class="secondary" id="playLocalBtn">PLAY AS GUEST</button></div></div>
+<div id="accountSignedOut">
+  <div class="menu-actions" style="margin:12px 0 16px">
+    <button type="button" class="secondary auth-tab" id="authUsernameTab" aria-pressed="true">👤 USERNAME + PASSWORD</button>
+    <button type="button" class="secondary auth-tab" id="authEmailTab" aria-pressed="false">✉ EMAIL LINK</button>
+  </div>
+  <div id="usernameAuthPanel">
+    <label class="input-label" for="accountUsername">USERNAME</label>
+    <input id="accountUsername" class="cloud-input" name="username" type="text" autocapitalize="none" autocomplete="username" spellcheck="false" maxlength="20" placeholder="Your pilot name" />
+    <label class="input-label" for="accountPassword" style="margin-top:12px">PASSWORD</label>
+    <input id="accountPassword" class="cloud-input" name="password" type="password" autocomplete="current-password" maxlength="72" placeholder="Your password" />
+    <div class="menu-actions">
+      <button type="button" class="primary" id="accountPasswordLogin">SIGN IN</button>
+      <button type="button" class="secondary" id="accountPasswordRegister">CREATE ACCOUNT</button>
+      <button type="button" class="secondary" id="accountShowPassword" aria-pressed="false">SHOW PASSWORD</button>
+    </div>
+    <p class="fineprint">New? Create an account with a username and password (10+ characters). Your browser remembers your sign-in and your scores sync to your account. Your password is never saved by VOIDRIFT.</p>
+    <p class="fineprint">⚠ No email is required, but password recovery for username-only accounts is not available yet. Save your password somewhere secure.</p>
+  </div>
+  <div id="emailAuthPanel" class="hidden">
+    <label class="input-label" for="accountEmail">EMAIL ADDRESS</label>
+    <input id="accountEmail" class="cloud-input" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" />
+    <div class="menu-actions"><button class="primary" id="accountSignIn">EMAIL ME A SIGN-IN LINK</button></div>
+    <p class="fineprint">Optional alternative: sign in with a link delivered to your email. This is a separate account from a username/password account.</p>
+  </div>
+  <div class="menu-actions" style="margin-top:16px"><button type="button" class="secondary" id="playLocalBtn">PLAY AS GUEST</button></div>
+</div>
 <div id="accountSignedIn" class="hidden"><label class="input-label" for="accountName">PUBLIC LEADERBOARD NAME</label><div class="name-row"><input id="accountName" class="cloud-input" placeholder="Your pilot callsign" maxlength="24"/><button class="primary" id="accountSaveName">SAVE NAME</button></div><div class="menu-actions"><button class="secondary" id="accountHistoryBtn">MY PRACTICE HISTORY</button><button class="secondary" id="accountSignOut">SIGN OUT</button></div><div id="accountHistory" class="pilot-history"></div></div>
 <p class="fineprint hidden" id="accountNotice"></p><p class="fineprint hidden" id="cloudSetupHint">Setup: add Supabase URL + publishable key to <code>public/config.js</code>, run the included SQL migration, and deploy the game Edge Function. Never place secret keys in your site.</p>
 <div class="menu-actions"><button class="secondary" id="accountClose">CLOSE</button></div>
