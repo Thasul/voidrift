@@ -380,6 +380,31 @@ function installSeasonal(){
   $('vr-launch-event').addEventListener('click',()=>{closePanel();practiceFlight(id)});
  }
 }
+function installMainMenu(){
+ const intro=$('intro')?.querySelector('.modal-panel');
+ if(!intro||intro.querySelector('#vr-main-menu'))return;
+ const oldActions=intro.querySelector('.menu-actions');
+ const menu=document.createElement('section');
+ menu.id='vr-main-menu';menu.className='vr-main-menu';
+ menu.innerHTML='<div class="vr-main-heading"><span class="vr-eyebrow">✦ VOIDRIFT EXPEDITION • NEW FEATURES</span>'+
+ '<h3>Your whole universe, one cockpit.</h3>'+
+ '<p>Explore 14 destinations, customize your ship, unlock achievements, and challenge a private crew.</p></div>';
+ const choices=document.createElement('div');choices.className='vr-main-actions';
+ [
+  ['🪐 GALAXY MAP','Track your flight through 14 worlds',mapPanel],
+  ['📖 CAPTAIN’S LOG','See your stats, streaks & badges',journalPanel],
+  ['🚀 SHIP HANGAR','Unlock hulls & engine colors',hangarPanel],
+  ['👥 FRIEND CREWS','Start a private daily race',crewPanel],
+  ['🖼 SHARE CARD','Export a flight report image',shareCardPanel]
+ ].forEach(([heading,desc,callback])=>{
+  const btn=document.createElement('button');btn.className='vr-main-action';btn.type='button';
+  btn.innerHTML='<strong>'+heading+'</strong><small>'+desc+'</small>';
+  btn.addEventListener('click',callback);choices.append(btn);
+ });
+ menu.append(choices);
+ if(oldActions?.nextSibling)intro.insertBefore(menu,oldActions.nextSibling);
+ else intro.append(menu);
+}
 function init(){
  try{installAnswerAliases()}catch(e){console.warn('Offline answer aliases unavailable',e)}
  try{installSeasonal()}catch(e){console.warn('Seasonal pack unavailable',e)}
@@ -392,6 +417,7 @@ function init(){
   btn.textContent=text;btn.onclick=handler;tools.append(btn);
  });
  $('app')?.append(tools);
+ installMainMenu();
  const overlay=document.createElement('div');overlay.className='vr-panel-overlay vr-hide';overlay.id='vr-overlay';
  overlay.innerHTML='<div class="vr-panel" role="dialog" aria-modal="true" aria-label="VOIDRIFT mission control" id="vr-dialog"></div>';
  overlay.addEventListener('click',e=>{if(e.target===overlay)closePanel()});
