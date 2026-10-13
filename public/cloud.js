@@ -310,6 +310,6 @@ async function init(){
     });
   }
 }
-window.VOIDRIFT_CLOUD={active:()=>onlineFlight&&activeMode==='daily',isSignedIn:()=>!!user,startDaily,submit:submitOnline,rarity,savePractice,showAccount,streak:()=>onlineStreak,refreshStreak};
+window.VOIDRIFT_CLOUD={active:()=>onlineFlight&&activeMode==='daily',isSignedIn:()=>!!user,startDaily,submit:submitOnline,rarity,savePractice,showAccount,request:api,streak:()=>onlineStreak,refreshStreak};
 init();
 })();
