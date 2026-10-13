@@ -59,3 +59,13 @@
 @media(max-width:1000px){.vr-tools.vr-header{top:70px;max-width:92vw}}
 @media(max-width:700px){.vr-tools.vr-header{top:82px;max-width:95vw;gap:3px}.vr-tools .vr-action{padding:6px 7px;font-size:10px}.vr-panel{padding:17px;max-height:92vh}.vr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vr-map-track{grid-template-columns:repeat(2,minmax(0,1fr))}.vr-achievements{grid-template-columns:1fr}.vr-card-panel{flex-direction:column}#vr-jump-flash{top:22%}}
 @media(prefers-reduced-motion:reduce){#vr-jump-flash.visible{animation:none;opacity:1;transition:opacity .5s}}
+
+
+#app.vr-hyperdrive #glass{animation:vrWarpPulse 1.3s ease-out both}
+#app.vr-hyperdrive #shipNose{filter:drop-shadow(0 0 24px #b77fff) saturate(1.45)}
+@keyframes vrWarpPulse{
+  0%,100%{filter:brightness(1) saturate(1)}
+  35%{filter:brightness(1.9) saturate(1.9)}
+  60%{filter:brightness(1.4) saturate(1.5)}
+}
+@media(prefers-reduced-motion:reduce){#app.vr-hyperdrive #glass{animation:none}}
