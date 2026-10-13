@@ -125,7 +125,7 @@
 <section class="question hidden" id="question"><div class="q-top"><span class="q-index" id="qIndex">QUESTION 01 / 10</span><span class="q-time" id="timer">25.0s</span></div><div class="timer-meter"><div class="timer-fill" id="timerFill"></div></div><div class="category" id="category">GEOGRAPHY</div><div class="play-mode-tag" id="modeTag">DAILY FLIGHT</div><h2 class="q-prompt" id="prompt">Name a country in Europe.</h2><p class="q-desc" id="qDesc">Any answer in the category counts.</p><form class="answer-control" id="answerForm"><input id="answer" autocomplete="off" spellcheck="true" maxlength="70" placeholder="Type any valid answer…" aria-label="Your trivia answer"/><button class="primary" id="answerSubmit" type="submit">ENGAGE ↗</button></form><div id="spellLive" class="spell-live hidden" aria-live="polite"></div><div id="spellPanel" class="check-panel spell-panel hidden"><strong>🪄 Possible spelling match</strong><span id="spellContext">Did you mean one of these accepted answers?</span><div id="spellOptions" class="spell-options"></div><div class="row"><button type="button" class="secondary" id="spellEdit">EDIT ANSWER</button><button type="button" class="secondary" id="spellOther">MY ANSWER IS DIFFERENT</button></div></div><div id="unlisted" class="check-panel hidden"><strong>Not found in this prototype's answer bank.</strong>Check spelling, or confirm a valid unlisted answer for the minimum 10 points. Unlisted answers cannot receive a rarity bonus.<div class="row"><button id="retryBtn" type="button" class="secondary">Try another</button><button id="confirmBtn" type="button" class="primary">Confirm valid +10</button></div></div><div class="q-actions"><button class="secondary" id="hintBtn" type="button">HINT</button><button class="secondary" id="passBtn" type="button">PASS · 0 PTS</button></div><div id="hint" class="fineprint">Find a less obvious but valid answer for a stronger jump.</div></section>
 <div class="answer-result hidden" id="answerResult"><div class="ar-status" id="arStatus">ANSWER ACCEPTED</div><div class="ar-points" id="arPoints">+80</div><div class="ar-tier" id="arTier">GALACTIC LEGEND</div><div class="ar-flavor" id="arFlavor">That answer belongs in the legends.</div><div class="ar-flight" id="arFlight">HYPERDRIVE ENGAGED · FLYING TO MERCURY</div></div>
 <div class="bottom"><div class="nose" id="shipNose"></div><div class="cockpit-window"></div><div class="console"><div class="console-signal">FLIGHT TELEMETRY<strong id="consoleTarget">SUN → MERCURY</strong></div><div class="route" id="route" aria-label="Solar-system route"></div><div class="run-progress"><span>WORLDS REACHED · DISTANCE</span><strong id="jumpCount">0 / 10</strong></div></div></div>
-<div class="intro" id="intro"><div class="modal-panel"><span class="tag">✦ DAILY MISSION + UNLIMITED PRACTICE</span><h1>Think rare.<br>Fly farther.</h1><p>Ten rapid-fire trivia prompts about <b>anything</b> — movies, animals, history, geography, games, science and more. Rare answers send you farther through the solar system — even past multiple planets in one flight. Obvious answers earn fewer points; deep cuts trigger bigger boosts.</p><div class="intro-grid"><div><strong>10 prompts</strong><span>Same 10 for everyone on the same UTC day.</span></div><div><strong>25 seconds</strong><span>One typed answer for each question.</span></div><div><strong>10 destinations</strong><span>Mercury → Pluto, including dwarf planets Ceres and Pluto.</span></div></div><div class="menu-actions"><button class="primary" id="launchBtn">LAUNCH TODAY'S FLIGHT →</button><button class="secondary" id="showPracticeBtn">∞ UNLIMITED PLAY</button><button class="secondary" id="introLeadersBtn">🏆 LEADERBOARD</button></div>
+<div class="intro" id="intro"><div class="modal-panel"><span class="tag">✦ DAILY MISSION + UNLIMITED PRACTICE</span><h1>Think rare.<br>Fly farther.</h1><p>Ten rapid-fire trivia prompts about <b>anything</b> — movies, animals, history, geography, games, science and more. Rare answers send you farther through the solar system — even past multiple planets in one flight. Obvious answers earn fewer points; deep cuts trigger bigger boosts.</p><div class="intro-grid"><div><strong>10 prompts</strong><span>Same 10 for everyone on the same UTC day.</span></div><div><strong>25 seconds</strong><span>One typed answer for each question.</span></div><div><strong>Beyond Pluto</strong><span>14 stops, from Mercury to the interstellar VOIDRIFT.</span></div></div><div class="menu-actions"><button class="primary" id="launchBtn">LAUNCH TODAY'S FLIGHT →</button><button class="secondary" id="showPracticeBtn">∞ UNLIMITED PLAY</button><button class="secondary" id="introLeadersBtn">🏆 LEADERBOARD</button></div>
  <div id="practiceChooser" class="practice-chooser hidden"><div class="chooser-heading"><strong>CHOOSE A TRIVIA SECTOR</strong><span>10 prompts per flight · replay as often as you want</span></div><div id="categoryGrid" class="category-grid"></div><div id="practiceResume" class="practice-resume hidden"><button class="secondary" id="resumePracticeBtn">↳ RESUME LAST PRACTICE FLIGHT</button></div></div><div class="intro-foot">NASA-based orbital order and distance markers. Stylized planet artwork and cinematic apparent sizes are not to scale. Cloud flights use server-verified points, with player-based rarity after enough flights. Guest flights still use local scoring.</div></div></div>
 <div class="results hidden" id="results"><div class="modal-panel result-panel"><span class="tag">✦ FLIGHT LOG COMPLETE</span><h2 id="finishTitle">Mission complete</h2><p id="finishText">You traveled across the solar system.</p><div class="metric-grid"><div class="metric"><label>Total points</label><strong id="finishScore">0</strong></div><div class="metric"><label>Destinations reached</label><strong id="finishJumps">0 / 10</strong></div><div class="metric"><label>Final location</label><strong id="finishPlanet">Sun</strong></div></div><div class="result-list" id="resultList"></div><div class="share" id="shareText"></div>
 <section id="rarityExplorer" class="rarity-explorer hidden" aria-label="Post-game answer rarity explorer">
@@ -141,7 +141,7 @@
   <div id="raritySuggestions" class="rarity-chip-list"></div>
 </section>
 <div class="result-actions"><button class="primary" id="copyBtn">COPY RESULTS</button><button class="secondary" id="playAgainBtn">PLAY ANOTHER RUN ↗</button><button class="secondary" id="chooseModeBtn">CHOOSE MODE</button><button class="secondary" id="closeResults">SEE COCKPIT</button></div></div></div>
-<div class="modal-shade hidden" id="rules"><div class="modal-panel"><span class="tag">PILOT'S MANUAL</span><h2>How to play</h2><ul><li>Daily Flight: ten fixed prompts everyone plays on the same UTC date. Unlimited: ten practice prompts in your chosen category — movies, video games, history, and more.</li><li>Daily progress and streaks are saved separately from unlimited flights, so practice never consumes your daily attempt.</li><li>Common spelling mistakes get local answer-bank suggestions. Choose the intended answer to get its full score.</li><li>Type any answer that belongs in the category before 25 seconds run out.</li><li>Cloud Daily scores use verified past-player rarity after enough submissions, with editorial tiers as a fallback. Guest and practice scores use editorial tiers.</li><li>Your score is rocket fuel: rare answers fly much farther and can pass multiple planets in one jump. Each planet requires more cumulative points to reach. Incorrect, unanswered and passed prompts add no distance.</li><li>The timer pauses while the rules are open.</li><li>Unlisted cloud answers can be checked by an optional AI reviewer or reported for human review. Unverified answers never inflate the public leaderboard. Guest / practice runs can self-confirm unlisted answers for 10 points.</li><li>There are eight official planets. Ceres and Pluto are dwarf planets, included to create ten stops.</li><li>Orbital order and AU numbers are based on real astronomy; planet display sizes and flight times are cinematic, not physically scaled.</li></ul><div class="reward-table"><div class="reward-row"><strong>10</strong> LIFTOFF</div><div class="reward-row"><strong>25</strong> STAR PILOT</div><div class="reward-row"><strong>45</strong> TRAILBLAZER</div><div class="reward-row"><strong>65</strong> VOID RUNNER</div><div class="reward-row"><strong>85</strong> GALACTIC LEGEND</div><div class="reward-row"><strong>100</strong> REALITY BREAKER</div></div><button id="closeRules" class="primary">BACK TO FLIGHT</button></div></div>
+<div class="modal-shade hidden" id="rules"><div class="modal-panel"><span class="tag">PILOT'S MANUAL</span><h2>How to play</h2><ul><li>Daily Flight: ten fixed prompts everyone plays on the same UTC date. Unlimited: ten practice prompts in your chosen category — movies, video games, history, and more.</li><li>Daily progress and streaks are saved separately from unlimited flights, so practice never consumes your daily attempt.</li><li>Common spelling mistakes get local answer-bank suggestions. Choose the intended answer to get its full score.</li><li>Type any answer that belongs in the category before 25 seconds run out.</li><li>Cloud Daily scores use verified past-player rarity after enough submissions, with editorial tiers as a fallback. Guest and practice scores use editorial tiers.</li><li>Your score is rocket fuel: rare answers fly much farther and can pass multiple planets in one jump. Each planet requires more cumulative points to reach. Incorrect, unanswered and passed prompts add no distance.</li><li>The timer pauses while the rules are open.</li><li>Unlisted cloud answers can be checked by an optional AI reviewer or reported for human review. Unverified answers never inflate the public leaderboard. Guest / practice runs can self-confirm unlisted answers for 10 points.</li><li>There are eight official planets; Ceres and Pluto are dwarf planets. Beyond Pluto are the Kuiper Belt, theoretical Oort Cloud, Alpha Centauri and a fictional VOIDRIFT.</li><li>Orbital order and AU numbers are based on real astronomy; planet display sizes and flight times are cinematic, not physically scaled.</li></ul><div class="reward-table"><div class="reward-row"><strong>10</strong> LIFTOFF</div><div class="reward-row"><strong>25</strong> STAR PILOT</div><div class="reward-row"><strong>45</strong> TRAILBLAZER</div><div class="reward-row"><strong>65</strong> VOID RUNNER</div><div class="reward-row"><strong>85</strong> GALACTIC LEGEND</div><div class="reward-row"><strong>100</strong> REALITY BREAKER</div></div><button id="closeRules" class="primary">BACK TO FLIGHT</button></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal-shade hidden" id="cloudModal"><div class="modal-panel multiplayer-modal">
 <span class="tag">☁ PILOT ACCOUNT</span><h2>Flight control</h2><p id="accountStatus">Sign in to save your game.</p>
@@ -191,11 +191,15 @@ const BODIES=[
  {id:'saturn_rings',name:'Saturn',type:'GAS GIANT',au:9.58,km:116460,fact:'A gas giant famous for broad rings made mostly of ice and rocky debris.'},
  {id:'uranus',name:'Uranus',type:'ICE GIANT',au:19.2,km:50724,fact:'An ice giant that rotates nearly on its side and looks pale cyan.'},
  {id:'neptune',name:'Neptune',type:'ICE GIANT',au:30.1,km:49244,fact:'A distant blue world with fast winds and turbulent weather.'},
- {id:'pluto',name:'Pluto',type:'DWARF PLANET · KUIPER BELT',au:39.5,km:2377,fact:'A Kuiper Belt dwarf planet with nitrogen ice and a bright heart-shaped basin.'}
+ {id:'pluto',name:'Pluto',type:'DWARF PLANET · KUIPER BELT',au:39.5,km:2377,fact:'A Kuiper Belt dwarf planet with nitrogen ice and a bright heart-shaped basin.'},
+ {id:'kuiper',name:'Kuiper Belt',type:'DISTANT ICY FRONTIER',au:49,km:0,fact:'A vast belt of icy leftovers beyond Neptune. You are now past the major planets.'},
+ {id:'oort',name:'Oort Cloud',type:'HYPOTHETICAL COMET RESERVOIR',au:2000,km:0,fact:'A theoretical shell of icy objects thousands of astronomical units from the Sun.'},
+ {id:'centauri',name:'Alpha Centauri',type:'NEAREST STAR SYSTEM',au:276000,km:0,fact:'A star system about 4.37 light-years from our Sun.'},
+ {id:'rift',name:'The VOIDRIFT',type:'FICTIONAL INTERSTELLAR ANOMALY',au:300000,km:0,fact:'A mysterious fictional rift beyond familiar star systems. You made it into legend.'}
 ];
 // Navigation uses score-based cumulative flight distance, not one planet per correct answer.
 // Milestones grow farther apart outward, as solar-system destinations do.
-const FLIGHT_THRESHOLDS=[0,15,40,80,135,215,315,445,600,780,975];
+const FLIGHT_THRESHOLDS=[0,15,35,60,95,140,195,260,330,390,450,700,820,900,975];
 function destinationForScore(score){
  const points=Math.max(0,Math.min(1000,Number(score)||0));let at=0;
  for(let i=1;i<FLIGHT_THRESHOLDS.length;i++)if(points>=FLIGHT_THRESHOLDS[i])at=i;
@@ -203,13 +207,13 @@ function destinationForScore(score){
 }
 function flightPosition(score){
  const at=destinationForScore(score);
- if(at>=10)return 10;
+ if(at>=BODIES.length-1)return BODIES.length-1;
  const a=FLIGHT_THRESHOLDS[at],b=FLIGHT_THRESHOLDS[at+1];
  return at+Math.max(0,Math.min(1,(score-a)/(b-a)));
 }
 function flightCrossings(from,to){return BODIES.slice(from+1,to+1).map(b=>b.name);}
 function flightSummary(from,to,score){
- if(to<=from)return 'HYPERDRIVE +'+score+' · EN ROUTE TO '+BODIES[Math.min(10,to+1)].name.toUpperCase();
+ if(to<=from)return 'HYPERDRIVE +'+score+' · EN ROUTE TO '+BODIES[Math.min(BODIES.length-1,to+1)].name.toUpperCase();
  const crossed=flightCrossings(from,to),passed=crossed.slice(0,-1);
  return (passed.length?'PASSED '+passed.join(' · ').toUpperCase()+' · ':'')+
         'ARRIVING '+crossed[crossed.length-1].toUpperCase();
@@ -334,8 +338,8 @@ function updateHud(){
  el.dayCount.textContent=activeMode==='daily'?'#'+DAY_NUMBER:'∞';el.topScore.textContent=state.score;el.topStreak.textContent=streak();$('modeTag').textContent=activeMode==='daily'?'DAILY FLIGHT':'∞ '+modeName().toUpperCase()+' PRACTICE';
  const body=BODIES[state.location];el.planetName.textContent=body.name;el.planetType.textContent=body.type;el.planetAu.textContent=`${body.au} AU FROM SUN`;el.planetSize.textContent=body.km.toLocaleString()+' KM Ø';el.planetFact.textContent=body.fact;
  el.targetLabel.textContent=state.transit?'IN TRANSIT · ARRIVING':state.location===0?'LAUNCH ORIGIN':'CURRENT LOCATION';
- el.consoleTarget.textContent=state.location<10?body.name.toUpperCase()+' → '+BODIES[state.location+1].name.toUpperCase():'OUTER SYSTEM REACHED';
- el.jumpCount.textContent=state.location+' / 10 · '+state.score+' PTS';
+ el.consoleTarget.textContent=state.location<BODIES.length-1?body.name.toUpperCase()+' → '+BODIES[state.location+1].name.toUpperCase():'RIFT REACHED';
+ el.jumpCount.textContent=state.location+' / '+(BODIES.length-1)+' · '+state.score+' PTS';
  el.route.innerHTML= BODIES.slice(1).map((body,i)=>`${i>0?'<span class="route-seg '+(i<state.location?'done':'')+'"></span>':''}<span class="route-stop ${i<state.location?'done':i===state.location?'target':''}" title="${body.name} · ${body.type}">${i+1}</span>`).join('');
 }
 function stopClock(){clearInterval(state.timeJob);state.timeJob=0;}
@@ -345,7 +349,7 @@ function renderQuestion(){
  if(state.index>=10){showResults();return}
  state.transit=null;state.locked=false;updateHud();const cat=mission[state.index];
  el.question.classList.remove('hidden','flight');el.answerResult.classList.add('hidden');el.unlisted.classList.add('hidden');$('spellPanel').classList.add('hidden');$('spellLive').classList.add('hidden');
- el.qIndex.textContent=`QUESTION ${String(state.index+1).padStart(2,'0')} / 10 · ${state.location<10?'NEXT: '+BODIES[state.location+1].name.toUpperCase()+' AT '+FLIGHT_THRESHOLDS[state.location+1]+' PTS':'PLUTO REACHED'}`;
+ el.qIndex.textContent=`QUESTION ${String(state.index+1).padStart(2,'0')} / 10 · ${state.location<BODIES.length-1?'NEXT: '+BODIES[state.location+1].name.toUpperCase()+' AT '+FLIGHT_THRESHOLDS[state.location+1]+' PTS':'VOIDRIFT REACHED'}`;
  el.category.textContent=cat.label;el.prompt.textContent=cat.prompt;el.qDesc.textContent=cat.desc;
  el.answer.value='';el.answer.disabled=false;$('answerSubmit').disabled=false;$('hintBtn').disabled=false;$('passBtn').disabled=false;
  el.hint.textContent='A close misspelling? Spellcheck can suggest an accepted answer.';
@@ -432,7 +436,7 @@ function commit(result){
  state.location=destinationForScore(state.score);
  const finishLocation=state.location;
  const milestoneText=result.correct?(finishLocation>startLocation?
-   BODIES[finishLocation].name:'En route to '+BODIES[Math.min(10,finishLocation+1)].name):null;
+   BODIES[finishLocation].name:'En route to '+BODIES[Math.min(BODIES.length-1,finishLocation+1)].name):null;
  state.answers.push({...result,cat:mission[state.index].label,prompt:mission[state.index].prompt,
   landing:result.correct?milestoneText:null,passed:flightCrossings(startLocation,finishLocation).slice(0,-1)});
  state.index++;
@@ -452,11 +456,11 @@ function commit(result){
  const delay=result.correct?state.transit.duration+150:1500;
  flightTimeout=setTimeout(()=>{state.transit=null;updateHud();if(state.finished)showResults();else renderQuestion();},delay);
 }
-function shareResult(){const glyphs=state.answers.map(a=>tier(a.score).symbol).join(' ');return `VOIDRIFT ${activeMode==='daily'?'#'+DAY_NUMBER:'∞ '+modeName()+' Run '+currentRunId} 🚀\n${state.score}/1000 pts · ${state.location}/10 worlds\n${glyphs}\nFinal stop: ${BODIES[state.location].name}\n10 trivia prompts`}
+function shareResult(){const glyphs=state.answers.map(a=>tier(a.score).symbol).join(' ');return `VOIDRIFT ${activeMode==='daily'?'#'+DAY_NUMBER:'∞ '+modeName()+' Run '+currentRunId} 🚀\n${state.score}/1000 pts · ${state.location}/${BODIES.length-1} worlds\n${glyphs}\nFinal stop: ${BODIES[state.location].name}\n10 trivia prompts`}
 function showResults(){state.finished=true;save();if(window.VOIDRIFT_CLOUD){window.VOIDRIFT_CLOUD.savePractice();window.VOIDRIFT_CLOUD.refreshStreak();}if(activeMode==='daily'&&!window.VOIDRIFT_CLOUD?.active())finishStreak();updateHud();el.question.classList.add('hidden');el.answerResult.classList.add('hidden');el.intro.classList.add('hidden');el.results.classList.remove('hidden');
- el.finishTitle.textContent=(state.location===10?'You reached Pluto!':state.location>=7?'Out past the giants.':'Flight log received.')+(activeMode==='practice'?' · '+modeName():'');
- el.finishText.textContent=(state.location===10?'Maximum range achieved: you made it to Pluto through your rare answers.':`You completed ten prompts, reached ${BODIES[state.location].name}, and earned ${state.score} points. Higher rarity carried you farther.`)+(activeMode==='practice'?' Unlimited runs never change your daily streak.':'');
- el.finishScore.textContent=state.score;el.finishJumps.textContent=state.location+' / 10';el.finishPlanet.textContent=BODIES[state.location].name;
+ el.finishTitle.textContent=(state.location===BODIES.length-1?'You broke into the VOIDRIFT!':state.location>=11?'Beyond Pluto. Into the unknown.':state.location>=7?'Out past the giants.':'Flight log received.')+(activeMode==='practice'?' · '+modeName():'');
+ el.finishText.textContent=(state.location===BODIES.length-1?'Maximum range achieved: your answers launched you beyond Alpha Centauri and into the fictional Rift.':`You completed ten prompts, reached ${BODIES[state.location].name}, and earned ${state.score} points. Higher rarity carried you farther.`)+(activeMode==='practice'?' Unlimited runs never change your daily streak.':'');
+ el.finishScore.textContent=state.score;el.finishJumps.textContent=state.location+' / '+(BODIES.length-1);el.finishPlanet.textContent=BODIES[state.location].name;
  el.resultList.innerHTML='';state.answers.forEach((a,i)=>{const row=document.createElement('div');row.className='result-line';const no=document.createElement('span'),mid=document.createElement('div'),b=document.createElement('b'),small=document.createElement('div'),right=document.createElement('span');no.className='r-no';no.textContent=String(i+1).padStart(2,'0');b.textContent=a.answer;small.className='q-small';small.textContent=a.cat+' · '+(a.landing?(a.landing.startsWith('En route')?a.landing:'Reached '+a.landing):'No boost');right.className='r-pts';right.textContent='+'+a.score;mid.append(b,small);row.append(no,mid,right);el.resultList.appendChild(row)});
  el.shareText.textContent=shareResult();
  showRarityExplorer();
@@ -622,8 +626,37 @@ const canvas=$('sky'),cx=canvas.getContext('2d',{alpha:false});let vw=0,vh=0,dpr
 const images={};for(const [k,data] of Object.entries(PLANETS)){const im=new Image();im.src='data:image/webp;base64,'+data;images[k]=im}
 function resize(){dpr=Math.min(2,window.devicePixelRatio||1);vw=window.innerWidth;vh=window.innerHeight;canvas.width=Math.floor(vw*dpr);canvas.height=Math.floor(vh*dpr);cx.setTransform(dpr,0,0,dpr,0,0);createStars()}
 function createStars(){starfield=Array.from({length:Math.min(640,Math.round(vw*vh/1300))},()=>({angle:Math.random()*Math.PI*2,r:Math.random(),z:.03+Math.random()*.98,bright:.25+Math.random()*.72,twinkle:Math.random()*10}))}
+function drawDeepSpaceDestination(index,scale,xshift,yshift,alpha,time){
+ const x=vw*(vw<700?.54:.48)+xshift,y=vh*(vw<700?.37:.43)+yshift;
+ const r=Math.max(12,Math.min(vw*.25,vh*.3,265)*scale);
+ cx.save();cx.globalAlpha=alpha;
+ const palette=index===11?['#72d0ff','#3a79bd']:index===12?['#c19bfa','#6c4aba']:index===13?['#ffd3a3','#ffa951']:['#c573ff','#5c9eff'];
+ const halo=cx.createRadialGradient(x,y,0,x,y,r*1.45);
+ halo.addColorStop(0,palette[0]+'dd');halo.addColorStop(.12,palette[1]+'88');
+ halo.addColorStop(.48,palette[1]+'1f');halo.addColorStop(1,'#00000000');
+ cx.fillStyle=halo;cx.beginPath();cx.arc(x,y,r*1.45,0,Math.PI*2);cx.fill();
+ if(index===14){
+  cx.translate(x,y);cx.rotate(time*.00010);
+  for(let i=0;i<4;i++){cx.beginPath();cx.ellipse(0,0,r*(.56+i*.14),r*(.22+i*.08),i*Math.PI/4,0,Math.PI*2);
+   cx.strokeStyle=i%2?'#9bc8ff':'#c987ff';cx.globalAlpha=alpha*(.55-i*.095);cx.lineWidth=Math.max(1,r*.018);cx.stroke();}
+ }else if(index===13){
+  for(const [dx,dy,size] of [[-r*.24,0,.34],[r*.24,r*.09,.27],[r*.12,-r*.31,.12]]){
+   const g=cx.createRadialGradient(x+dx,y+dy,0,x+dx,y+dy,r*size);
+   g.addColorStop(0,'#fffbe8');g.addColorStop(.2,palette[0]);g.addColorStop(1,'#ffffff00');
+   cx.fillStyle=g;cx.beginPath();cx.arc(x+dx,y+dy,r*size,0,Math.PI*2);cx.fill();
+  }
+ }else{
+  for(let i=0;i<24;i++){
+   const ang=i*2.399963+index*11,dist=r*(.2+(i%7)/9),size=Math.max(1.5,r*(.008+(i%5)*.006));
+   cx.fillStyle=i%3?'#c6edff':'#f6f1ff';cx.beginPath();cx.arc(x+Math.cos(ang)*dist,y+Math.sin(ang)*dist,size,0,Math.PI*2);cx.fill();
+  }
+ }
+ cx.restore();
+}
 function planetDraw(index,scale=1,xshift=0,yshift=0,alpha=1,time=0){
- const p=BODIES[index],img=images[p.id];if(!img?.complete||!img.naturalWidth)return;
+ const p=BODIES[index],img=images[p.id];
+ if(index>10){drawDeepSpaceDestination(index,scale,xshift,yshift,alpha,time);return;}
+ if(!img?.complete||!img.naturalWidth)return;
  const centerX=vw*(vw<700?.54:.48)+xshift,centerY=vh*(vw<700?.37:.43)+yshift;
  const maxR=Math.min(vw*(vw<700?.47:.22),vh*(vw<700?.32:.32),300);
  const base=Math.max(95,maxR), r=base*scale;
@@ -661,8 +694,8 @@ function drawOrbitDecor(time){
 function drawNavigationPosition(position,time){
  // Each fractional sector shows both the departing world and the one ahead.
  // Passing an integer index hands the camera seamlessly to the next world.
- const from=Math.min(10,Math.floor(position));
- if(from===10){planetDraw(10,1,0,Math.sin(time*.0002)*4,1,time);return;}
+ const from=Math.min(BODIES.length-1,Math.floor(position));
+ if(from>=BODIES.length-1){planetDraw(BODIES.length-1,1,0,Math.sin(time*.0002)*4,1,time);return;}
  const frac=Math.max(0,Math.min(1,position-from));
  if(frac<.005){planetDraw(from,1,0,Math.sin(time*.0002)*4,1,time);return;}
  const fromScale=Math.max(.025,Math.pow(1-frac,1.5));
