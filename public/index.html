@@ -675,12 +675,13 @@ function planetDraw(index,scale=1,xshift=0,yshift=0,alpha=1,time=0){
 }
 function drawStars(dt,boost,time){
  cx.save();const centerX=vw*.5,centerY=vh*.44;
+ const trailRGB=window.VOIDRIFT_EXPEDITION?.trailRGB?.()||['181,215,253','215,239,255'];
  for(const s of starfield){s.z-=dt*(.1+boost*.95);if(s.z<=.01)s.z=1;
    const depth=1/(s.z+.25),dist=s.r*Math.max(vw,vh)*.48*depth;
    let x=centerX+Math.cos(s.angle)*dist,y=centerY+Math.sin(s.angle)*dist;
    if(x<0||x>vw||y<0||y>vh){s.z=1;continue}
    const bright=s.bright*(.75+.25*Math.sin(time*.001+s.twinkle)),len=boost>1?boost*24*(1-s.z):0;
-   cx.strokeStyle=`rgba(181,215,253,${bright*.7})`;cx.fillStyle=`rgba(215,239,255,${bright})`;
+   cx.strokeStyle=`rgba(${trailRGB[0]},${bright*.7})`;cx.fillStyle=`rgba(${trailRGB[1]},${bright})`;
    if(len>2){cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.cos(s.angle)*len,y+Math.sin(s.angle)*len);cx.stroke()}
    else {cx.fillRect(x,y,Math.max(.7,1.5*(1-s.z)),Math.max(.7,1.5*(1-s.z)))}
  }
