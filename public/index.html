@@ -116,6 +116,7 @@
 #accountPasswordRegister{border-color:rgba(137,235,251,.4)}
 #usernameAuthPanel .fineprint,#emailAuthPanel .fineprint{line-height:1.55}
 </style>
+<link rel="stylesheet" href="./expedition.css">
 </head>
 <body>
 <div id="app">
@@ -336,7 +337,7 @@ function resumePractice(){
 
 function updateHud(){
  el.dayCount.textContent=activeMode==='daily'?'#'+DAY_NUMBER:'∞';el.topScore.textContent=state.score;el.topStreak.textContent=streak();$('modeTag').textContent=activeMode==='daily'?'DAILY FLIGHT':'∞ '+modeName().toUpperCase()+' PRACTICE';
- const body=BODIES[state.location];el.planetName.textContent=body.name;el.planetType.textContent=body.type;el.planetAu.textContent=`${body.au} AU FROM SUN`;el.planetSize.textContent=body.km.toLocaleString()+' KM Ø';el.planetFact.textContent=body.fact;
+ const body=BODIES[state.location];el.planetName.textContent=body.name;el.planetType.textContent=body.type;el.planetAu.textContent=`${body.au} AU FROM SUN`;el.planetSize.textContent=body.km?body.km.toLocaleString()+' KM Ø':'DEEP-SPACE SECTOR';el.planetFact.textContent=body.fact;
  el.targetLabel.textContent=state.transit?'IN TRANSIT · ARRIVING':state.location===0?'LAUNCH ORIGIN':'CURRENT LOCATION';
  el.consoleTarget.textContent=state.location<BODIES.length-1?body.name.toUpperCase()+' → '+BODIES[state.location+1].name.toUpperCase():'RIFT REACHED';
  el.jumpCount.textContent=state.location+' / '+(BODIES.length-1)+' · '+state.score+' PTS';
@@ -446,6 +447,7 @@ function commit(result){
  el.arStatus.textContent=result.correct?(result.correctedFrom?'SPELLING FIXED: '+result.correctedFrom.toUpperCase()+' → '+result.answer.toUpperCase():'ANSWER ACCEPTED · NAVIGATION LOCKED'):'NO VERIFIED ANSWER';
  el.arPoints.textContent='+'+result.score;el.arTier.textContent=t.name;el.arFlavor.textContent=t.line;el.answerResult.dataset.rank=String(t.score);
  el.arFlight.textContent=result.correct?flightSummary(startLocation,finishLocation,result.score):'NO BOOST · HOLDING POSITION';
+ window.VOIDRIFT_EXPEDITION?.onAnswer?.(result,startLocation,finishLocation);
  if(result.correct){
    const crossed=Math.max(0,finishLocation-startLocation);
    state.transit={from:startLocation,to:finishLocation,scoreFrom:startScore,scoreTo:state.score,
@@ -464,6 +466,7 @@ function showResults(){state.finished=true;save();if(window.VOIDRIFT_CLOUD){wind
  el.resultList.innerHTML='';state.answers.forEach((a,i)=>{const row=document.createElement('div');row.className='result-line';const no=document.createElement('span'),mid=document.createElement('div'),b=document.createElement('b'),small=document.createElement('div'),right=document.createElement('span');no.className='r-no';no.textContent=String(i+1).padStart(2,'0');b.textContent=a.answer;small.className='q-small';small.textContent=a.cat+' · '+(a.landing?(a.landing.startsWith('En route')?a.landing:'Reached '+a.landing):'No boost');right.className='r-pts';right.textContent='+'+a.score;mid.append(b,small);row.append(no,mid,right);el.resultList.appendChild(row)});
  el.shareText.textContent=shareResult();
  showRarityExplorer();
+ window.VOIDRIFT_EXPEDITION?.onFinish?.();
 }
 // The post-game explorer is for completed daily flights only. This function
 // never changes game state, daily score, or streaks.
@@ -744,4 +747,5 @@ updateHud();refreshMenu();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="./cloud.js"></script>
+<script src="./expedition.js"></script>
 </body></html>
