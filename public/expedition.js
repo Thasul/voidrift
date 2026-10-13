@@ -12,6 +12,7 @@ const api=(action,body={})=>{
 };
 const STORE='voidrift:captains-log:v1',STYLE='voidrift:ship:v1';
 let profileCache=null,crewCache=null,currentPanel='';
+let engineTrail='cyan';
 const shipChoices=[['scout','Scout','Standard explorer'],['comet','Comet','Finish one daily'],['storm','Storm Chaser','Reach Jupiter'],['nebula','Nebula Cruiser','Reach Pluto'],['rift','Riftbreaker','Reach the Rift']];
 const trailChoices=[['cyan','Ion Cyan','Starter thrusters'],['amber','Solar Gold','Finish one daily'],['violet','Void Violet','3-day streak'],['rose','Pulsar Rose','Best score 600+']];
 const icons=['☀','☿','♀','🌎','♂','✧','♃','♄','♅','♆','◌','❄','✺','✦','◇'];
@@ -20,6 +21,7 @@ function savedHistory(){
 }
 function applyStyle(){
  let skin={ship:'scout',trail:'cyan'};try{skin={...skin,...JSON.parse(localStorage.getItem(STYLE)||'{}')}}catch{}
+ engineTrail=skin.trail;
  const app=$('app');if(!app)return;
  app.className=app.className.replace(/\bvr-(ship|trail)-[\w-]+\b/g,'').trim();
  app.classList.add('vr-ship-'+skin.ship,'vr-trail-'+skin.trail);
@@ -409,6 +411,12 @@ function init(){
  }catch{}
  if(state?.finished)onFinish();
 }
-window.VOIDRIFT_EXPEDITION={onFinish,onAnswer,openMap:mapPanel,openJournal:journalPanel,openCrew:crewPanel,shareCard:shareCardPanel};
+window.VOIDRIFT_EXPEDITION={
+ onFinish,onAnswer,openMap:mapPanel,openJournal:journalPanel,openCrew:crewPanel,shareCard:shareCardPanel,
+ trailRGB:()=>engineTrail==='amber'?['255,198,135','255,239,196']:
+   engineTrail==='violet'?['199,155,255','236,214,255']:
+   engineTrail==='rose'?['255,155,189','255,220,230']:
+   ['181,215,253','215,239,255']
+};
 init();
 })();
