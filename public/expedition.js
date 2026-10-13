@@ -291,6 +291,31 @@ function shareCardPanel(){
  }
  const row=document.createElement('div');row.className='vr-card-panel';row.append(img,actions);root.append(row);
 }
+function installAnswerAliases(){
+ // Match offline guest/practice answers to the same canonical scores used by cloud play.
+ const states='al:alabama,ak:alaska,az:arizona,ar:arkansas,ca:california,co:colorado,ct:connecticut,de:delaware,fl:florida,ga:georgia,hi:hawaii,id:idaho,il:illinois,in:indiana,ia:iowa,ks:kansas,ky:kentucky,la:louisiana,me:maine,md:maryland,ma:massachusetts,mi:michigan,mn:minnesota,ms:mississippi,mo:missouri,mt:montana,ne:nebraska,nv:nevada,nh:new hampshire,nj:new jersey,nm:new mexico,ny:new york,nc:north carolina,nd:north dakota,oh:ohio,ok:oklahoma,or:oregon,pa:pennsylvania,ri:rhode island,sc:south carolina,sd:south dakota,tn:tennessee,tx:texas,ut:utah,vt:vermont,va:virginia,wa:washington,wv:west virginia,wi:wisconsin,wy:wyoming';
+ const groups=[
+  ['geography2',states.split(',').map(s=>s.split(':'))],
+  ['geography',[['uk','united kingdom'],['great britain','united kingdom']]],
+  ['gaming',[['cod','call of duty'],['gta','grand theft auto'],['ff','final fantasy'],['the legend of zelda','legend of zelda']]],
+  ['practice-games-12',[
+   ['final fantasy i','final fantasy 1'],['final fantasy ii','final fantasy 2'],
+   ['final fantasy iii','final fantasy 3'],['final fantasy iv','final fantasy 4'],
+   ['final fantasy v','final fantasy 5'],['final fantasy vi','final fantasy 6'],
+   ['final fantasy vii','final fantasy 7'],['final fantasy viii','final fantasy 8'],
+   ['final fantasy ix','final fantasy 9'],['final fantasy x','final fantasy 10'],
+   ['final fantasy xi','final fantasy 11'],['final fantasy xii','final fantasy 12'],
+   ['final fantasy xiii','final fantasy 13'],['final fantasy xiv','final fantasy 14'],
+   ['final fantasy xv','final fantasy 15'],['final fantasy xvi','final fantasy 16']]]
+ ];
+ groups.forEach(([tag,pairs])=>{
+  const cat=CATEGORIES.find(c=>c.tag===tag);if(!cat?.ans)return;
+  pairs.forEach(([alias,canonical])=>{
+   const key=norm(alias),target=cat.ans.get(norm(canonical));
+   if(target&&!cat.ans.has(key))cat.ans.set(key,target);
+  });
+ });
+}
 const halloweenPack=[
  ['Name a classic movie monster.','vampire|10;werewolf|10;zombie|10;frankenstein|25;mummy|25;creature from the black lagoon|65;phantom of the opera|65;nosferatu|45;the blob|85'],
  ['Name a horror video game.','resident evil|10;silent hill|10;dead space|25;amnesia|45;outlast|25;fatal frame|65;signalis|85;little nightmares|45;alien isolation|25;until dawn|25'],
@@ -342,6 +367,7 @@ function installSeasonal(){
  }
 }
 function init(){
+ try{installAnswerAliases()}catch(e){console.warn('Offline answer aliases unavailable',e)}
  try{installSeasonal()}catch(e){console.warn('Seasonal pack unavailable',e)}
  const tools=document.createElement('nav');tools.className='vr-tools vr-header';
  tools.setAttribute('aria-label','VOIDRIFT exploration tools');
