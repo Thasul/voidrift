@@ -1,0 +1,61 @@
+
+/* VOIDRIFT EXPEDITION — starmap, profile, crews, card sharing and cosmetic HUD */
+.vr-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+.vr-tools .vr-action{font-size:11px;letter-spacing:.07em;padding:9px 11px;border:1px solid rgba(143,209,253,.33);background:rgba(4,20,44,.9);border-radius:10px;color:#d4ecff;cursor:pointer}
+.vr-tools .vr-action:hover,.vr-tools .vr-action:focus-visible{border-color:#74eaff;background:#12305b}
+.vr-tools.vr-header{position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:7;max-width:45vw;pointer-events:auto}
+.vr-panel-overlay{position:fixed;inset:0;z-index:95;background:rgba(0,5,15,.85);display:flex;justify-content:center;align-items:center;padding:14px;backdrop-filter:blur(16px)}
+.vr-panel-overlay.vr-hide{display:none}
+.vr-panel{width:min(940px,96vw);max-height:min(880px,94vh);overflow:auto;background:linear-gradient(145deg,#081a36,#090d23 75%);border:1px solid #446f9d;border-radius:23px;box-shadow:0 24px 85px #000b,0 0 70px #21579c22;color:#ecf7ff;padding:24px}
+.vr-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.vr-panel-head h2{margin:4px 0;font-size:clamp(21px,3.5vw,32px);letter-spacing:-.03em}
+.vr-eyebrow{color:#7ee5ff;font-size:11px;letter-spacing:.21em;font-weight:800}
+.vr-muted{color:#9bb5d4;line-height:1.5}
+.vr-panel p{margin:6px 0 12px}
+.vr-close{background:#153153;border:1px solid #5080ad;border-radius:10px;padding:9px 14px}
+.vr-btn{border:1px solid #4476ad;border-radius:11px;background:#163a68;padding:10px 14px;margin:4px 5px 4px 0;color:white;font-weight:750}
+.vr-btn:hover{background:#28639e}.vr-btn:disabled{opacity:.45;cursor:default}
+.vr-input{padding:11px 12px;border-radius:10px;border:1px solid #426d9c;background:#061b34;color:#fff;min-width:0;width:min(300px,100%);margin:5px}
+.vr-sublabel{font-size:11px;letter-spacing:.12em;color:#a8c9e5;font-weight:750}
+.vr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}
+.vr-stat{background:#101f39;border:1px solid #344c76;border-radius:14px;padding:13px}
+.vr-stat strong{display:block;font-size:24px;color:#dbf7ff}.vr-stat span{color:#a7b9d4;font-size:11px;letter-spacing:.08em}
+.vr-map-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:18px 0}
+.vr-world{background:#07162c;border:1px solid #335078;border-radius:13px;padding:12px;min-height:86px;text-align:left;position:relative}
+.vr-world strong{display:block;margin-top:5px;font-size:13px}.vr-world small{display:block;color:#9bb6d5;margin-top:3px;font-size:10px}
+.vr-world.passed{border-color:#389abc;background:linear-gradient(145deg,#0d3045,#0c1b36)}
+.vr-world.current{border:2px solid #85ecff;box-shadow:0 0 0 3px #50eaff14,0 0 25px #22b8ff35}
+.vr-world.future{opacity:.55}
+.vr-world .vr-dot{font-size:24px}
+.vr-progress{height:12px;background:#132541;border-radius:20px;overflow:hidden;border:1px solid #395783;margin:12px 0}
+.vr-progress > div{height:100%;background:linear-gradient(90deg,#4fc6df,#b974f8);border-radius:20px;transition:width .35s}
+.vr-card-panel{display:flex;gap:18px;flex-wrap:wrap}
+.vr-card-preview{flex:1 1 280px;min-width:0;border-radius:15px;border:1px solid #2d5586;width:min(420px,100%)}
+.vr-card-actions{flex:1 1 210px}
+.vr-achievements{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.vr-achievement{background:#152a48;border:1px solid #365579;border-radius:12px;padding:12px}
+.vr-achievement.locked{opacity:.48;filter:grayscale(.8)}
+.vr-achievement strong{display:block;font-size:13px}.vr-achievement small{color:#b7c9e0}
+.vr-member{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 5px;border-bottom:1px solid #324666}
+.vr-member strong{color:#b9f5ff}.vr-member span{color:#abc3db}
+.vr-palette{display:flex;flex-wrap:wrap;gap:7px}.vr-palette button{border:1px solid #34557b;border-radius:12px;background:#102747;padding:12px;color:#edf7ff}
+.vr-palette button.active{border-color:#8cecff;background:#174567}
+.vr-palette button.locked{opacity:.48}
+#vr-jump-flash{position:fixed;left:50%;top:26%;transform:translate(-50%,-50%);z-index:18;pointer-events:none;opacity:0;min-width:220px;text-align:center;color:#dffbff;text-shadow:0 0 35px #7de6ff}
+#vr-jump-flash.visible{animation:vr-jump 1.9s ease-out both}
+#vr-jump-flash b{display:block;font-size:clamp(22px,5vw,58px);line-height:1.05;letter-spacing:.05em}
+#vr-jump-flash span{font-size:13px;letter-spacing:.16em}
+@keyframes vr-jump{0%{opacity:0;transform:translate(-50%,-42%) scale(.8)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-68%) scale(.98)}}
+#app.vr-ship-comet .nose{filter:drop-shadow(0 0 14px #ffbb5c);border-color:#f6af6b}
+#app.vr-ship-storm .nose{filter:drop-shadow(0 0 20px #5dbbff);border-color:#80d6ff}
+#app.vr-ship-nebula .nose{filter:drop-shadow(0 0 24px #c18af9);border-color:#c18af9}
+#app.vr-ship-rift .nose{filter:drop-shadow(0 0 28px #e58eff);border-color:#e7b0ff}
+#app.vr-trail-amber .cockpit-window{box-shadow:inset 0 0 35px #ffb84b28}
+#app.vr-trail-violet .cockpit-window{box-shadow:inset 0 0 35px #be8cfc30}
+#app.vr-trail-rose .cockpit-window{box-shadow:inset 0 0 35px #ff75902e}
+.vr-event-tile{padding:15px;border:1px solid #b981f188;background:linear-gradient(100deg,#41206e95,#0e2846);border-radius:14px;margin:16px 0}
+.vr-event-tile strong{font-size:17px}.vr-event-tile p{margin:6px 0;color:#cfc6e6}
+.vr-event-tile button{border:1px solid #b794ff;background:#4a267e;color:#fff;padding:9px 15px;border-radius:11px;cursor:pointer}
+@media(max-width:1000px){.vr-tools.vr-header{top:70px;max-width:92vw}}
+@media(max-width:700px){.vr-tools.vr-header{top:82px;max-width:95vw;gap:3px}.vr-tools .vr-action{padding:6px 7px;font-size:10px}.vr-panel{padding:17px;max-height:92vh}.vr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vr-map-track{grid-template-columns:repeat(2,minmax(0,1fr))}.vr-achievements{grid-template-columns:1fr}.vr-card-panel{flex-direction:column}#vr-jump-flash{top:22%}}
+@media(prefers-reduced-motion:reduce){#vr-jump-flash.visible{animation:none;opacity:1;transition:opacity .5s}}
