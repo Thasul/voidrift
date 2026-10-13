@@ -292,7 +292,7 @@ function shareCardPanel(){
  }));
  actions.append(uiButton('OPEN STAR CHART',mapPanel));
  actions.append(uiButton('COPY RESULT TEXT',async()=>{
-  const text='VOIDRIFT · '+DAY+'\n'+state.score+'/1000 points\n'+BODIES[state.location].name+' · '+state.location+' worlds reached\nThink Rare. Travel Far.\nhttps://voiddrifting.netlify.app/';
+  const text='VOIDRIFT · '+DAY+'\n'+state.score+'/1000 points\n'+BODIES[state.location].name+' · '+state.location+' worlds reached\nThink Rare. Travel Far.\nhttps://thasul.github.io/voidrift/';
   try{await navigator.clipboard.writeText(text);alert('Result text copied!')}catch{alert(text)}
  }));
  if(navigator.share&&typeof File!=='undefined'){
