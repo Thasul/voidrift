@@ -69,3 +69,26 @@
   60%{filter:brightness(1.4) saturate(1.5)}
 }
 @media(prefers-reduced-motion:reduce){#app.vr-hyperdrive #glass{animation:none}}
+
+
+/* Distinct silhouettes, not just recolors: earned ships change the visible prow. */
+#app.vr-ship-comet .nose{
+ width:115px;height:141px;
+ clip-path:polygon(50% 0%,60% 18%,72% 40%,96% 76%,100% 100%,67% 84%,33% 84%,0 100%,4% 76%,28% 40%,40% 18%);
+ background:linear-gradient(90deg,#1b1725,#9b684b 49%,#201324);
+}
+#app.vr-ship-storm .nose{
+ width:140px;height:124px;
+ clip-path:polygon(50% 0%,59% 18%,64% 49%,100% 76%,93% 100%,58% 78%,42% 78%,7% 100%,0 76%,36% 49%,41% 18%);
+ background:linear-gradient(90deg,#0a1e39,#3b8fb0 49%,#0b2141);
+}
+#app.vr-ship-nebula .nose{
+ width:125px;height:151px;
+ clip-path:polygon(50% 0%,70% 26%,87% 62%,100% 100%,72% 84%,50% 95%,28% 84%,0 100%,13% 62%,30% 26%);
+ background:linear-gradient(90deg,#2b1551,#b488cb 49%,#201146);
+}
+#app.vr-ship-rift .nose{
+ width:137px;height:144px;
+ clip-path:polygon(50% 0%,64% 19%,68% 44%,100% 70%,93% 100%,66% 83%,50% 100%,34% 83%,7% 100%,0 70%,32% 44%,36% 19%);
+ background:linear-gradient(90deg,#0a1130,#9d7ee0 48%,#171044);
+}
