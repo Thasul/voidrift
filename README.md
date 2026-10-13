@@ -1,3 +1,27 @@
+# VOIDRIFT — Free GitHub Pages Edition
+
+**Current site (once GitHub Pages is enabled): https://thasul.github.io/voidrift/**
+
+VOIDRIFT is a daily rare-answer trivia spaceflight game with **14 destinations**, cinematic jumps, Rarity Explorer, daily leaderboard, username/password pilot accounts, optional email-link login, friend crews, a captain's log, seasonal trivia, unlockable ship cosmetics, and share cards.
+
+## Free website hosting — GitHub Pages
+
+GitHub Pages replaces the old Netlify frontend. Supabase continues powering accounts, scores, private crews, and rarity scoring; there is **no change to player data**. You do not need Netlify.
+
+**One-time GitHub account setting:** Open [this repository's GitHub Pages settings](https://github.com/Thasul/voidrift/settings/pages), under **Build and deployment** select **Source → GitHub Actions**. This is required because GitHub Actions' built-in token cannot create a Pages site for a repository that has never had it enabled. The publishing workflow is already checked in at `.github/workflows/deploy-pages.yml`. After enabling Pages, open [Publish VOIDRIFT on GitHub Pages](https://github.com/Thasul/voidrift/actions/workflows/deploy-pages.yml), select **Run workflow** on `main`. It publishes the `public/` directory at `https://thasul.github.io/voidrift/`.
+
+**One-time Supabase email sign-in redirect:** In [Supabase Auth URL Configuration](https://supabase.com/dashboard/project/ssytwlgpfzfycoyctdum/auth/url-configuration), set Site URL to `https://thasul.github.io/voidrift/` and add `https://thasul.github.io/voidrift/**` to **Redirect URLs**. Username/password accounts work without email redirects; optional email links require this.
+
+**Automatic updates:** Every change to `public/` on GitHub `main` triggers a free GitHub Pages deployment. All links in the game are relative to the site root, so the `/voidrift/` base path works. `public/version.txt` can be used to check the deployed version.
+
+**Browser storage:** Signing in on the new domain requires a one-time fresh sign-in because browser sessions and local guest saves are origin-specific. Cloud daily scores/history/crews are not lost. Guest-only saves on Netlify are not automatically transferred. No service-role or secret keys are included in the static site.
+
+---
+
+## Historical setup notes (Netlify is no longer the recommended host)
+
+The sections below describe the initial Netlify/Supabase setup and are retained for project history. For the current live deployment follow the GitHub Pages instructions above.
+
 # VOIDRIFT — Multiplayer Daily Trivia
 
 VOIDRIFT is your original 10-question space-trivia game with the full-screen cockpit, 10 solar-system destinations, answer spelling help, Movies / Gaming / other Unlimited modes, tiered victory animations and sounds.
