@@ -92,3 +92,26 @@
  clip-path:polygon(50% 0%,64% 19%,68% 44%,100% 70%,93% 100%,66% 83%,50% 100%,34% 83%,7% 100%,0 70%,32% 44%,36% 19%);
  background:linear-gradient(90deg,#0a1130,#9d7ee0 48%,#171044);
 }
+
+
+/* Homepage discovery cards: always visible above the intro overlay's backdrop. */
+#vr-main-menu{margin:16px 0 15px;padding:15px;border:1px solid rgba(112,212,255,.38);
+ background:linear-gradient(125deg,rgba(9,37,74,.91),rgba(35,22,77,.64));border-radius:16px}
+#vr-main-menu .vr-main-heading h3{margin:6px 0 4px;font-size:clamp(17px,2.7vw,22px);color:#e9faff}
+#vr-main-menu .vr-main-heading p{margin:0 0 11px;font-size:12px;line-height:1.45;color:#b9d6ed}
+.vr-main-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.vr-main-action{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;
+ padding:10px 12px;border-radius:11px;background:rgba(5,17,40,.88);
+ border:1px solid rgba(130,193,250,.37);color:#effaff;min-height:62px}
+.vr-main-action:first-child{grid-column:span 2;background:linear-gradient(125deg,rgba(19,78,110,.92),rgba(28,52,99,.92));border-color:rgba(119,225,248,.64)}
+.vr-main-action:hover,.vr-main-action:focus-visible{background:rgba(27,75,122,.87);border-color:#b7eeff}
+.vr-main-action strong{display:block;font-size:12px;letter-spacing:.045em}
+.vr-main-action small{display:block;margin-top:5px;font-size:10px;color:#b4cce7;font-weight:450}
+@media(max-width:700px){
+ #vr-main-menu{padding:10px;margin:12px 0}
+ .vr-main-actions{gap:5px}
+ .vr-main-action{padding:9px;min-height:57px}
+ .vr-main-action strong{font-size:10px}
+ .vr-main-action small{font-size:9px}
+ #vr-main-menu .vr-main-heading h3{font-size:17px}
+}
