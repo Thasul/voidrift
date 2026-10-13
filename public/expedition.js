@@ -72,6 +72,7 @@ function onAnswer(result,from,to){
  strong.textContent=score>=100?'REALITY BREAKER':score>=85?'GALACTIC LEGEND':score>=65?'VOID RUNNER':score>=45?'TRAILBLAZER':'HYPERDRIVE';
  sub.textContent='+'+score+' FUEL  ·  '+(stops>1?'PASSED '+(stops-1)+' WORLDS':stops===1?'NEW DESTINATION':'CLOSING DISTANCE');
  flash.append(strong,sub);flash.classList.remove('visible');void flash.offsetWidth;flash.classList.add('visible');
+ if(score>=65){const app=$('app');app?.classList.add('vr-hyperdrive');setTimeout(()=>app?.classList.remove('vr-hyperdrive'),1450)}
 }
 function uiButton(text,onClick){
  const el=document.createElement('button');el.className='vr-btn';el.textContent=text;
@@ -91,6 +92,16 @@ function panel(title,eyebrow){
 }
 function closePanel(){const b=$('vr-overlay');if(b)b.classList.add('vr-hide');currentPanel='';}
 function section(html){const node=document.createElement('section');node.innerHTML=html;return node;}
+function tutorialPanel(){
+ const root=panel('HOW TO FLY','WELCOME TO VOIDRIFT');
+ root.append(section('<p class="vr-muted">You are piloting a trivia-powered ship. Every answer becomes fuel. The rarer the answer, the farther you travel.</p>'+
+ '<div class="vr-grid">'+
+ '<div class="vr-stat"><strong>① ANSWER</strong><span>10 DAILY PROMPTS</span><p>Type something that fits the question within 25 seconds.</p></div>'+
+ '<div class="vr-stat"><strong>② BOOST</strong><span>RARE = LONGER JUMP</span><p>Earn 10–100 points and zoom past multiple planets.</p></div>'+
+ '<div class="vr-stat"><strong>③ EXPLORE</strong><span>14 DESTINATIONS</span><p>Check the star chart, earn ships, join friends, share a card.</p></div>'+
+ '</div><p class="vr-muted">Daily resets at midnight UTC. Unlimited and seasonal runs do not alter the daily score. Username accounts sync to Supabase; guests save on this browser.</p>'));
+ root.append(uiButton('READY TO LAUNCH',()=>{try{localStorage.setItem('voidrift:training:v1','1')}catch{}closePanel()}));
+}
 function mapPanel(){
  const mount=panel('STAR CHART','14 DESTINATIONS • EXPLORE FURTHER');
  const here=state.location,score=state.score;
@@ -277,6 +288,7 @@ function shareCardPanel(){
  actions.append(uiButton('DOWNLOAD PNG',()=>{
   const a=document.createElement('a');a.download='voidrift-'+DAY+'.png';a.href=canvas.toDataURL('image/png');a.click();
  }));
+ actions.append(uiButton('OPEN STAR CHART',mapPanel));
  actions.append(uiButton('COPY RESULT TEXT',async()=>{
   const text='VOIDRIFT · '+DAY+'\n'+state.score+'/1000 points\n'+BODIES[state.location].name+' · '+state.location+' worlds reached\nThink Rare. Travel Far.\nhttps://voiddrifting.netlify.app/';
   try{await navigator.clipboard.writeText(text);alert('Result text copied!')}catch{alert(text)}
@@ -372,6 +384,7 @@ function init(){
  const tools=document.createElement('nav');tools.className='vr-tools vr-header';
  tools.setAttribute('aria-label','VOIDRIFT exploration tools');
  const commands=[['✦ STAR MAP',mapPanel],['📖 CAPTAIN’S LOG',journalPanel],['🚀 HANGAR',hangarPanel],['👥 CREW',crewPanel]];
+ commands.unshift(['? HOW TO PLAY',tutorialPanel]);
  commands.forEach(([text,handler])=>{
   const btn=document.createElement('button');btn.className='vr-action';btn.type='button';
   btn.textContent=text;btn.onclick=handler;tools.append(btn);
@@ -391,6 +404,9 @@ function init(){
   actions.append(uiButton('👥 MY CREW',crewPanel));
  }
  applyStyle();
+ try{
+  if(!localStorage.getItem('voidrift:training:v1')&&!state.started)tutorialPanel();
+ }catch{}
  if(state?.finished)onFinish();
 }
 window.VOIDRIFT_EXPEDITION={onFinish,onAnswer,openMap:mapPanel,openJournal:journalPanel,openCrew:crewPanel,shareCard:shareCardPanel};
