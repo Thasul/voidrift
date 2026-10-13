@@ -140,7 +140,7 @@ async function loadLeaderboard(){
     for(const p of data.leaders){
       const row=document.createElement('div');row.className='pilot-line';
       const name=document.createElement('span');name.textContent=`#${p.rank} · ${p.name}`;
-      const score=document.createElement('strong');score.textContent=`${p.score} pts · ${p.worlds}/10 worlds`;
+      const score=document.createElement('strong');score.textContent=`${p.score} pts · ${p.worlds}/14 worlds`;
       row.append(name,score);$('leaderboardList').append(row);
     }
   }catch(e){$('leaderboardList').textContent='Could not load rankings: '+errMessage(e);}
@@ -252,7 +252,7 @@ async function loadPractice(){
     if(!r.runs.length){$('accountHistory').textContent='No saved practice flights yet.';return;}
     for(const x of r.runs.slice(0,8)){
       const div=document.createElement('div');div.className='pilot-line';
-      div.textContent=`${new Date(x.created_at).toLocaleDateString()} · ${x.genre} · ${x.score} pts · ${x.destinations}/10`;
+      div.textContent=`${new Date(x.created_at).toLocaleDateString()} · ${x.genre} · ${x.score} pts · ${x.destinations}/14`;
       $('accountHistory').append(div);
     }
   }catch(e){showToast(errMessage(e));}
