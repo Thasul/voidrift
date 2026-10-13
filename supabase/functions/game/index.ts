@@ -287,6 +287,137 @@ async function registerPilot(req:Request,body:any){
  return reply({created:true,username});
 }
 
+
+// Captain's Log and unlocks: computed from verified server-side runs, never from browser claims.
+async function captainSummary(user:any){
+ const {data:runs,error:re}=await admin.from('game_runs')
+   .select('id,day,total_score,destinations,finished_at,mode')
+   .eq('user_id',user.id).eq('mode','daily').not('finished_at','is',null)
+   .order('day',{ascending:false}).limit(365);
+ if(re)throw re;
+ const rows=runs||[];
+ const {data:practice,error:pe}=await admin.from('practice_history')
+   .select('genre,score,destinations,created_at').eq('user_id',user.id)
+   .order('created_at',{ascending:false}).limit(50);
+ if(pe)throw pe;
+ const {data:subs,error:se}=await admin.from('game_submissions')
+   .select('run_id,prompt_tag,answer_text,points,verdict').in('run_id',rows.length?rows.map(r=>r.id):['00000000-0000-0000-0000-000000000000'])
+   .order('points',{ascending:false}).limit(20);
+ if(se)throw se;
+ const best=Math.max(0,...rows.map(x=>x.total_score));
+ const farthest=Math.max(0,...rows.map(x=>x.destinations));
+ const rarest=(subs||[]).filter(x=>x.points>0)[0]||null;
+ const streak=await cloudStreak(user);
+ const badges=[
+  {id:'first-flight',name:'First Contact',detail:'Finish your first daily flight.',earned:rows.length>=1},
+  {id:'orbital',name:'Orbital Navigator',detail:'Reach Jupiter or farther.',earned:farthest>=6},
+  {id:'pluto',name:'Deep-Space Explorer',detail:'Reach Pluto.',earned:farthest>=10},
+  {id:'rift',name:'Riftbreaker',detail:'Reach the final Rift.',earned:farthest>=14},
+  {id:'legend',name:'Galactic Legend',detail:'Score 85+ on a verified answer.',earned:(subs||[]).some(x=>x.points>=85)},
+  {id:'veteran',name:'Seasoned Pilot',detail:'Finish 7 daily missions.',earned:rows.length>=7},
+  {id:'steady',name:'Steady Navigator',detail:'Reach a 3-day streak.',earned:streak>=3},
+  {id:'halloween',name:'Halloween Voyager',detail:'Finish a daily mission during October.',earned:rows.some(x=>String(x.day).slice(5,7)==='10')}
+ ];
+ const ownedShips=['scout',...(rows.length>=1?['comet']:[]),...(farthest>=6?['storm']:[]),...(farthest>=10?['nebula']:[]),...(farthest>=14?['rift']:[])];
+ const ownedTrails=['cyan',...(rows.length>=1?['amber']:[]),...(streak>=3?['violet']:[]),...(best>=600?['rose']:[])];
+ const {data:cosmetic}=await admin.from('voidrift_customization')
+  .select('ship,trail').eq('user_id',user.id).maybeSingle();
+ return {name:await getProfile(user),streak,totalDaily:rows.length,totalPractice:(practice||[]).length,
+   bestScore:best,farthest,pointsEarned:rows.reduce((sum,x)=>sum+x.total_score,0),
+   rarest:rarest?{answer:rarest.answer_text,points:rarest.points,category:rarest.prompt_tag}:null,
+   recent:rows.slice(0,12).map(x=>({day:x.day,score:x.total_score,destinations:x.destinations})),
+   categories:(practice||[]).reduce((acc:Record<string,number>,p:any)=>{acc[p.genre]=(acc[p.genre]||0)+1;return acc;},{}),
+   badges,ownedShips,ownedTrails,
+   cosmetic:{ship:ownedShips.includes(cosmetic?.ship)?cosmetic.ship:'scout',
+     trail:ownedTrails.includes(cosmetic?.trail)?cosmetic.trail:'cyan'}
+ };
+}
+function crewInviteCode(){
+ const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+ const bytes=crypto.getRandomValues(new Uint8Array(6));
+ return Array.from(bytes,v=>alphabet[v%alphabet.length]).join('');
+}
+async function crewStatus(user:any){
+ const {data:membership,error:me}=await admin.from('voidrift_crew_members')
+  .select('crew_id,joined_at').eq('user_id',user.id).maybeSingle();
+ if(me)throw me;
+ if(!membership)return {crew:null};
+ const {data:crew,error:ce}=await admin.from('voidrift_crews').select('id,name,invite_code,owner_id')
+  .eq('id',membership.crew_id).single();
+ if(ce)throw ce;
+ const {data:members,error:ee}=await admin.from('voidrift_crew_members')
+  .select('user_id,joined_at').eq('crew_id',crew.id).order('joined_at');
+ if(ee)throw ee;
+ const ids=(members||[]).map(m=>m.user_id);
+ const {data:profiles}=ids.length?await admin.from('player_profiles')
+  .select('user_id,display_name').in('user_id',ids):{data:[]};
+ const named=new Map((profiles||[]).map(p=>[p.user_id,p.display_name]));
+ const day=dayUTC();
+ const {data:flights,error:fe}=ids.length?await admin.from('game_runs')
+  .select('user_id,total_score,destinations,finished_at').in('user_id',ids)
+  .eq('day',day).eq('mode','daily'):{data:[],error:null};
+ if(fe)throw fe;
+ const flown=new Map((flights||[]).filter(r=>r.finished_at).map(r=>[r.user_id,r]));
+ const board=ids.map(id=>{
+  const r=flown.get(id);
+  return {name:named.get(id)||'Pilot',score:r?.total_score??null,
+   worlds:r?.destinations??null,finished:!!r,isYou:id===user.id};
+ }).sort((a,b)=>(b.score??-1)-(a.score??-1)||a.name.localeCompare(b.name));
+ return {crew:{name:crew.name,code:crew.invite_code,isOwner:crew.owner_id===user.id,
+   memberCount:ids.length,day,board}};
+}
+async function crewAction(user:any,action:string,body:any){
+ if(action==='crew_status')return reply(await crewStatus(user));
+ if(action==='crew_create'){
+  const name=String(body.name||'').trim().replace(/[<>]/g,'').slice(0,28);
+  if(name.length<3)return err('Crew name must have at least 3 characters.');
+  const existing=await crewStatus(user);if(existing.crew)return err('Leave your current crew first.',409);
+  for(let attempt=0;attempt<5;attempt++){
+   const code=crewInviteCode();
+   const {data:crew,error:ce}=await admin.from('voidrift_crews')
+     .insert({name,invite_code:code,owner_id:user.id}).select('id').single();
+   if(ce){if(ce.code==='23505')continue;throw ce;}
+   const {error:me}=await admin.from('voidrift_crew_members')
+     .insert({crew_id:crew.id,user_id:user.id});
+   if(me){await admin.from('voidrift_crews').delete().eq('id',crew.id);throw me;}
+   return reply(await crewStatus(user));
+  }
+  return err('Could not create crew. Please try again.',503);
+ }
+ if(action==='crew_join'){
+  const code=String(body.code||'').trim().toUpperCase();
+  if(!/^[A-Z2-9]{6}$/.test(code))return err('Enter a six-character crew code.');
+  const existing=await crewStatus(user);if(existing.crew)return err('You already belong to a crew.',409);
+  const {data:crew,error:ce}=await admin.from('voidrift_crews').select('id')
+    .eq('invite_code',code).maybeSingle();
+  if(ce)throw ce;if(!crew)return err('Crew code not found.',404);
+  const {count,error:co}=await admin.from('voidrift_crew_members')
+   .select('user_id',{count:'exact',head:true}).eq('crew_id',crew.id);
+  if(co)throw co;if((count||0)>=30)return err('This crew is full.',409);
+  const {error:joinError}=await admin.from('voidrift_crew_members')
+    .insert({crew_id:crew.id,user_id:user.id});
+  if(joinError)return err('Unable to join. You may already be in a crew.',409);
+  return reply(await crewStatus(user));
+ }
+ if(action==='crew_leave'){
+  const active=await crewStatus(user);
+  if(!active.crew)return err('Not part of a crew.',409);
+  const {data:membership}=await admin.from('voidrift_crew_members')
+   .select('crew_id').eq('user_id',user.id).single();
+  if(active.crew.isOwner){
+    // Owner departure disbands the crew so no orphaned private membership exists.
+    const {error}=await admin.from('voidrift_crews').delete().eq('id',membership.crew_id);
+    if(error)throw error;
+  }else{
+    const {error}=await admin.from('voidrift_crew_members')
+      .delete().eq('user_id',user.id).eq('crew_id',membership.crew_id);
+    if(error)throw error;
+  }
+  return reply({crew:null,left:true});
+ }
+ return err('Unknown crew action.',400);
+}
+
 Deno.serve(async(req)=>{
  if(req.method==='OPTIONS')return new Response(null,{headers});
  try{
@@ -304,6 +435,20 @@ Deno.serve(async(req)=>{
   if(req.method!=='POST')return err('Unsupported action',405);
   const body=await req.json();
   if(action==='submit')return await submit(user,body);
+  if(action==='captain')return reply(await captainSummary(user));
+  if(action==='crew_status'||action==='crew_create'||action==='crew_join'||action==='crew_leave')
+    return await crewAction(user,action,body);
+  if(action==='customize'){
+    const summary=await captainSummary(user);
+    const ship=String(body.ship||'scout'),trail=String(body.trail||'cyan');
+    if(!summary.ownedShips.includes(ship)||!summary.ownedTrails.includes(trail))
+      return err('Complete achievements to unlock that cosmetic.',403);
+    const {error}=await admin.from('voidrift_customization')
+      .upsert({user_id:user.id,ship,trail,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    if(error)throw error;
+    return reply({ship,trail});
+  }
+
   if(action==='rarity')return await lookupRarity(user,body);
   if(action==='profile'){
    const name=String(body.name||'').trim().replace(/[^\p{L}\p{N} _.-]/gu,'').slice(0,24);
@@ -320,7 +465,7 @@ Deno.serve(async(req)=>{
   if(action==='practice'){
    const clientRunId=String(body.clientRunId||'').slice(0,60),genre=String(body.genre||'mixed').slice(0,30);
    const score=Number(body.score),destinations=Number(body.destinations);
-   if(!clientRunId||!Number.isInteger(score)||score<0||score>1000||!Number.isInteger(destinations)||destinations<0||destinations>10)return err('Invalid practice result.');
+   if(!clientRunId||!Number.isInteger(score)||score<0||score>1000||!Number.isInteger(destinations)||destinations<0||destinations>14)return err('Invalid practice result.');
    const {error}=await admin.from('practice_history').upsert({user_id:user.id,client_run_id:clientRunId,genre,score,destinations},{onConflict:'user_id,client_run_id'});
    if(error)throw error;return reply({saved:true});
   }
