@@ -1,2 +1,3 @@
-VOIDRIFT EXPEDITION 2.2
-Features: star map, captain log, hangar, crews, share cards, 14 stops.
+VOIDRIFT EXPEDITION 2.3 — GitHub Pages
+Site: https://thasul.github.io/voidrift/
+Source: Thasul/voidrift main public/
