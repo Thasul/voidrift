@@ -24,6 +24,18 @@ const reply=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status
 const err=(message:string,status=400)=>reply({error:message},status);
 const dayUTC=()=>new Date().toISOString().slice(0,10);
 function normalize(s:string){return String(s).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();}
+async function recognizedAnswer(tag:string,raw:string,entries:any[]){
+ const key=normalize(raw),noArticle=key.replace(/^(the|a|an) /,'');
+ const found=entries.find(a=>a.normalized===key)
+  ||entries.find(a=>a.normalized===noArticle)
+  ||entries.find(a=>a.normalized.replace(/^(the|a|an) /,'')===noArticle);
+ if(found)return found;
+ const {data:alias,error}=await admin.from('game_answer_aliases')
+   .select('canonical').eq('prompt_tag',tag).eq('alias',key).maybeSingle();
+ if(error)throw error;
+ if(!alias)return null;
+ return entries.find(a=>a.normalized===alias.canonical)||null;
+}
 function seededPRNG(seed:number){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
 function hash(s:string){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0;}
 function shuffle<T>(a:T[],rand:()=>number){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -156,9 +168,8 @@ async function lookupRarity(user:any,body:any){
   .select('normalized,display_answer,editorial_score').eq('prompt_tag',tag);
  if(lookupError)throw lookupError;
  const rows=list||[];
- const norm=normalize(raw),alias=norm.replace(/^(the|a|an) /,'');
- let found=rows.find(a=>a.normalized===norm)||rows.find(a=>a.normalized===alias)
-  ||rows.find(a=>a.normalized.replace(/^(the|a|an) /,'')===alias);
+ const norm=normalize(raw);
+ let found=await recognizedAnswer(tag,raw,rows);
  // AI-verified answers from prior flights are searchable even if editors have
  // not added them to the permanent answer bank yet. No automatic AI calls.
  let canonical=found?.normalized||norm;
@@ -206,8 +217,7 @@ async function submit(user:any,body:any){
    const {data:entries,error:ae}=await admin.from('game_answers').select('normalized,display_answer,editorial_score').eq('prompt_tag',tag);
    if(ae)throw ae;
    const list=entries||[];
-   const alias=norm.replace(/^(the|a|an) /,'');
-   const found=list.find(a=>a.normalized===norm)||list.find(a=>a.normalized===alias)||list.find(a=>a.normalized.replace(/^(the|a|an) /,'')===alias);
+   const found=await recognizedAnswer(tag,original,list);
    let editorial=found?.editorial_score||65;
    if(found){correct=true;canonical=found.normalized;verdict='bank';}
    else {
