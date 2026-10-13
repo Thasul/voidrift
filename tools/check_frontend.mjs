@@ -16,7 +16,7 @@ const checks = [
   [source.includes('id="spellPanel"'), 'Spelling correction UI exists'],
   [cloud.includes('submitOnline') && cloud.includes('showCloudSuggestions'), 'Cloud scoring and suggestions exist'],
   [source.includes('id="rarityExplorer"') && source.includes('exploreRarity'), 'Post-daily Rarity Explorer exists'],
-  [source.includes('src="./expedition.js"') && source.includes('href="./expedition.css"'), 'Expedition game extension loaded'],
+  [source.includes('src="./expedition.js?') && source.includes('href="./expedition.css?'), 'Expedition game extension loaded'],
   [expedition.includes('function mapPanel(') && expedition.includes('function journalPanel(') && expedition.includes('function crewPanel('), 'Map, captain log and crews exist'],
   [expedition.includes('function shareCardPanel(') && expedition.includes('function hangarPanel('), 'Share cards and cosmetic hangar exist'],
   [expeditionCSS.includes('.vr-map-track') && expeditionCSS.includes('.vr-panel-overlay'), 'Responsive expedition style exists'],
