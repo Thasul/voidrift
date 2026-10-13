@@ -7,6 +7,8 @@ const read = p => readFileSync(new URL(p, root),'utf8');
 const source = read('public/index.html');
 const cloud = read('public/cloud.js');
 const cfg = read('public/config.js');
+const expedition = read('public/expedition.js');
+const expeditionCSS = read('public/expedition.css');
 const checks = [
   [source.includes('const DAILY_CATEGORIES'), 'Daily challenge remains available'],
   [source.includes('const BONUS_QUESTIONS'), 'Unlimited questions exist'],
@@ -14,6 +16,10 @@ const checks = [
   [source.includes('id="spellPanel"'), 'Spelling correction UI exists'],
   [cloud.includes('submitOnline') && cloud.includes('showCloudSuggestions'), 'Cloud scoring and suggestions exist'],
   [source.includes('id="rarityExplorer"') && source.includes('exploreRarity'), 'Post-daily Rarity Explorer exists'],
+  [source.includes('src="./expedition.js"') && source.includes('href="./expedition.css"'), 'Expedition game extension loaded'],
+  [expedition.includes('function mapPanel(') && expedition.includes('function journalPanel(') && expedition.includes('function crewPanel('), 'Map, captain log and crews exist'],
+  [expedition.includes('function shareCardPanel(') && expedition.includes('function hangarPanel('), 'Share cards and cosmetic hangar exist'],
+  [expeditionCSS.includes('.vr-map-track') && expeditionCSS.includes('.vr-panel-overlay'), 'Responsive expedition style exists'],
   [cloud.includes('async function rarity(tag,answer)'), 'Rarity Explorer calls server for cloud scores'],
   [!cfg.includes('service_role:') && !cfg.includes('sk-proj-'), 'No obvious secret key in browser config'],
 ];
@@ -27,8 +33,10 @@ try {
     const checked=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
     if(checked.status!==0){ console.error(checked.stderr);process.exitCode=1; }
   }
-  const file=new URL('public/cloud.js',root).pathname;
+  for (const extra of ['public/cloud.js','public/expedition.js']) {
+  const file=new URL(extra,root).pathname;
   const checked=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
-  if(checked.status!==0){ console.error(checked.stderr);process.exitCode=1; }
+  if(checked.status!==0){ console.error(extra+': '+checked.stderr);process.exitCode=1; }
+  }
 } finally { rmSync(tmp,{recursive:true,force:true}); }
 console.log('JavaScript syntax checks completed.');
